@@ -15,14 +15,28 @@ const app = express();
 // Connect to MongoDB
 connectDB();
 
-// Allow any localhost origin in development (supports any Vite port)
+// Allow localhost in development, and the specific CLIENT_URL in production
 const corsOptions = {
   origin: (origin, callback) => {
-    // Allow requests with no origin (like curl/Postman) or any localhost origin
-    if (!origin || /^http:\/\/localhost:\d+$/.test(origin) || origin === (process.env.CLIENT_URL || 'http://localhost:5173')) {
+    const allowedOrigins = [
+      'http://localhost:5173', 
+      'http://localhost:5174', 
+      'http://localhost:5175',
+      process.env.CLIENT_URL
+    ].filter(Boolean);
+
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    
+    // In development, we can be more permissive with localhost
+    if (process.env.NODE_ENV !== 'production' && origin.startsWith('http://localhost:')) {
+      return callback(null, true);
+    }
+    
+    if (allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
-      callback(new Error('Not allowed by CORS'));
+      callback(new Error(`Origin ${origin} not allowed by CORS`));
     }
   },
   credentials: true,
