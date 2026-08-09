@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 
 exports.getTransactions = async (req, res, next) => {
   try {
-    const userId = req.user.id;
+    const userId = new mongoose.Types.ObjectId(req.user.id);
     const {
       search,
       categoryId,
@@ -81,7 +81,7 @@ exports.getTransactions = async (req, res, next) => {
 
 exports.createTransaction = async (req, res, next) => {
   try {
-    const userId = req.user.id;
+    const userId = new mongoose.Types.ObjectId(req.user.id);
     const { category_id, amount, type, merchant_name, note, date } = req.body;
 
     if (!amount || !type || !merchant_name) {
@@ -125,7 +125,7 @@ exports.createTransaction = async (req, res, next) => {
 
 exports.updateTransaction = async (req, res, next) => {
   try {
-    const userId = req.user.id;
+    const userId = new mongoose.Types.ObjectId(req.user.id);
     const { id } = req.params;
     const { category_id, amount, type, merchant_name, note, date } = req.body;
 
@@ -163,7 +163,7 @@ exports.updateTransaction = async (req, res, next) => {
 
 exports.deleteTransaction = async (req, res, next) => {
   try {
-    const userId = req.user.id;
+    const userId = new mongoose.Types.ObjectId(req.user.id);
     const { id } = req.params;
 
     const result = await Transaction.findOneAndDelete({ _id: id, user_id: userId });

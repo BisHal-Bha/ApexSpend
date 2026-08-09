@@ -2,42 +2,28 @@ exports.errorHandler = (err, req, res, next) => {
   console.error('Error:', err.message);
   console.error('Stack:', err.stack);
 
-  const statusCode = err.statusCode || 500;
+  let statusCode = err.statusCode || 500;
+  let message = process.env.NODE_ENV === 'production'
+    ? 'Internal Server Error'
+    : err.message || 'Internal Server Error';
 
-  // Handle PostgreSQL specific errors
-  if (err.code === '23505') {
-    return res.status(409).json({
-      error: {
-        message: 'A record with this information already exists',
-        status: 409,
-      },
-    });
+  // Handle MongoDB Duplicate Key Error
+  if (err.code === 11000) {
+    statusCode = 409;
+    message = 'A record with this information already exists';
   }
 
-  if (err.code === '23503') {
-    return res.status(400).json({
-      error: {
-        message: 'Referenced record does not exist',
-        status: 400,
-      },
-    });
+  // Handle Mongoose Validation Error
+  if (err.name === 'ValidationError') {
+    statusCode = 400;
+    message = Object.values(err.errors).map((val) => val.message).join(', ');
   }
 
-  if (err.code === '22P02') {
-    return res.status(400).json({
-      error: {
-        message: 'Invalid input format',
-        status: 400,
-      },
-    });
+  // Handle Mongoose Cast Error (e.g., invalid ObjectId)
+  if (err.name === 'CastError') {
+    statusCode = 400;
+    message = 'Resource not found';
   }
 
-  res.status(statusCode).json({
-    error: {
-      message: process.env.NODE_ENV === 'production'
-        ? 'Internal Server Error'
-        : err.message || 'Internal Server Error',
-      status: statusCode,
-    },
-  });
+  res.status(statusCode).json({ message });
 };

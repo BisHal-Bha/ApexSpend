@@ -2,7 +2,7 @@ const Category = require('../models/Category');
 
 exports.getCategories = async (req, res, next) => {
   try {
-    const userId = req.user.id;
+    const userId = new mongoose.Types.ObjectId(req.user.id);
     const { type } = req.query;
 
     const filter = { user_id: userId };
@@ -19,7 +19,7 @@ exports.getCategories = async (req, res, next) => {
 
 exports.createCategory = async (req, res, next) => {
   try {
-    const userId = req.user.id;
+    const userId = new mongoose.Types.ObjectId(req.user.id);
     const { name, type, color, icon } = req.body;
 
     if (!name) {
@@ -56,7 +56,7 @@ exports.createCategory = async (req, res, next) => {
 
 exports.updateCategory = async (req, res, next) => {
   try {
-    const userId = req.user.id;
+    const userId = new mongoose.Types.ObjectId(req.user.id);
     const { id } = req.params;
     const { name, type, color, icon } = req.body;
 
@@ -83,7 +83,7 @@ exports.updateCategory = async (req, res, next) => {
     if (color) updates.color = color;
     if (icon) updates.icon = icon;
 
-    const updated = await Category.findByIdAndUpdate(id, updates, { new: true });
+    const updated = await Category.findByIdAndUpdate(id, updates, { returnDocument: 'after' });
     res.json(updated);
   } catch (error) {
     next(error);
@@ -92,7 +92,7 @@ exports.updateCategory = async (req, res, next) => {
 
 exports.deleteCategory = async (req, res, next) => {
   try {
-    const userId = req.user.id;
+    const userId = new mongoose.Types.ObjectId(req.user.id);
     const { id } = req.params;
 
     const existing = await Category.findOne({ _id: id, user_id: userId });

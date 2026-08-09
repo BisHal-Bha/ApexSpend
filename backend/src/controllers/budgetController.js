@@ -4,7 +4,7 @@ const Transaction = require('../models/Transaction');
 
 exports.getBudgets = async (req, res, next) => {
   try {
-    const userId = req.user.id;
+    const userId = new mongoose.Types.ObjectId(req.user.id);
     const month = parseInt(req.query.month) || new Date().getMonth() + 1;
     const year = parseInt(req.query.year) || new Date().getFullYear();
 
@@ -23,7 +23,7 @@ exports.getBudgets = async (req, res, next) => {
     const spendingAgg = await Transaction.aggregate([
       {
         $match: {
-          user_id: { $in: [userId, require('mongoose').Types.ObjectId.createFromHexString(userId)] },
+          user_id: userId,
           type: 'expense',
           date: { $gte: startOfMonth, $lte: endOfMonth },
         },
@@ -63,7 +63,7 @@ exports.getBudgets = async (req, res, next) => {
 
 exports.setBudget = async (req, res, next) => {
   try {
-    const userId = req.user.id;
+    const userId = new mongoose.Types.ObjectId(req.user.id);
     const { category_id, monthly_limit, month, year } = req.body;
 
     if (!category_id || !monthly_limit) {
@@ -80,7 +80,7 @@ exports.setBudget = async (req, res, next) => {
     const budget = await Budget.findOneAndUpdate(
       { user_id: userId, category_id, month: budgetMonth, year: budgetYear },
       { $set: { monthly_limit: parseFloat(monthly_limit) } },
-      { new: true, upsert: true, runValidators: true }
+      { returnDocument: 'after', upsert: true, runValidators: true }
     );
 
     res.json(budget);
@@ -91,7 +91,7 @@ exports.setBudget = async (req, res, next) => {
 
 exports.updateBudget = async (req, res, next) => {
   try {
-    const userId = req.user.id;
+    const userId = new mongoose.Types.ObjectId(req.user.id);
     const { id } = req.params;
     const { monthly_limit } = req.body;
 
@@ -102,7 +102,7 @@ exports.updateBudget = async (req, res, next) => {
     const budget = await Budget.findOneAndUpdate(
       { _id: id, user_id: userId },
       { monthly_limit: parseFloat(monthly_limit) },
-      { new: true }
+      { returnDocument: 'after' }
     );
 
     if (!budget) {
@@ -117,7 +117,7 @@ exports.updateBudget = async (req, res, next) => {
 
 exports.deleteBudget = async (req, res, next) => {
   try {
-    const userId = req.user.id;
+    const userId = new mongoose.Types.ObjectId(req.user.id);
     const { id } = req.params;
 
     const budget = await Budget.findOneAndDelete({ _id: id, user_id: userId });

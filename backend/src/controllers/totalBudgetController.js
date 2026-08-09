@@ -2,7 +2,7 @@ const TotalBudget = require('../models/TotalBudget');
 
 exports.getTotalBudget = async (req, res, next) => {
   try {
-    const userId = req.user.id;
+    const userId = new mongoose.Types.ObjectId(req.user.id);
     const month = parseInt(req.query.month) || new Date().getMonth() + 1;
     const year = parseInt(req.query.year) || new Date().getFullYear();
 
@@ -16,7 +16,7 @@ exports.getTotalBudget = async (req, res, next) => {
 
 exports.setTotalBudget = async (req, res, next) => {
   try {
-    const userId = req.user.id;
+    const userId = new mongoose.Types.ObjectId(req.user.id);
     const { amount, month, year } = req.body;
 
     if (!amount || parseFloat(amount) <= 0) {
@@ -29,7 +29,7 @@ exports.setTotalBudget = async (req, res, next) => {
     const totalBudget = await TotalBudget.findOneAndUpdate(
       { user_id: userId, month: budgetMonth, year: budgetYear },
       { $set: { amount: parseFloat(amount) } },
-      { new: true, upsert: true, runValidators: true }
+      { returnDocument: 'after', upsert: true, runValidators: true }
     );
 
     res.json(totalBudget);

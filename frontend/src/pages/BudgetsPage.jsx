@@ -2,7 +2,6 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Plus } from 'lucide-react';
 import { BudgetProgressBar } from '../components/budget/BudgetProgressBar';
 import { BudgetModal } from '../components/budget/BudgetModal';
-import { TotalBudgetModal } from '../components/budget/TotalBudgetModal';
 import { StatusMessage } from '../components/common/StatusMessage';
 import { ConfirmationBanner } from '../components/common/ConfirmationBanner';
 import { EmptyState } from '../components/common/EmptyState';
@@ -22,22 +21,14 @@ export const BudgetsPage = () => {
   const [editingBudget, setEditingBudget] = useState(null);
   const [isSaving, setIsSaving] = useState(false);
   
-  const [globalTotalBudget, setGlobalTotalBudget] = useState(null);
-  const [isTotalModalOpen, setIsTotalModalOpen] = useState(false);
-  const [isSavingTotal, setIsSavingTotal] = useState(false);
-  
   const [status, setStatus] = useState(null);
   const [deleteRequest, setDeleteRequest] = useState(null);
 
   const fetchBudgets = useCallback(async () => {
     setLoading(true);
     try {
-      const [budgetsRes, totalRes] = await Promise.all([
-        api.get(`/budgets?month=${selectedMonth}&year=${selectedYear}`),
-        api.get(`/total-budgets?month=${selectedMonth}&year=${selectedYear}`)
-      ]);
+      const budgetsRes = await api.get(`/budgets?month=${selectedMonth}&year=${selectedYear}`);
       setBudgets(budgetsRes.data);
-      setGlobalTotalBudget(totalRes.data);
     } catch (err) {
       setStatus({ message: 'Failed to load budgets', type: 'error' });
     } finally {
@@ -71,23 +62,6 @@ export const BudgetsPage = () => {
     }
   };
 
-  const handleSaveTotal = async (data) => {
-    setIsSavingTotal(true);
-    try {
-      await api.post('/total-budgets', data);
-      setStatus({ message: 'Total budget set successfully', type: 'success' });
-      setIsTotalModalOpen(false);
-      fetchBudgets();
-    } catch (err) {
-      setStatus({ 
-        message: err.response?.data?.message || 'Failed to save total budget', 
-        type: 'error' 
-      });
-    } finally {
-      setIsSavingTotal(false);
-    }
-  };
-
   const confirmDelete = async () => {
     if (!deleteRequest) return;
     setIsSaving(true);
@@ -103,12 +77,10 @@ export const BudgetsPage = () => {
     }
   };
 
-  const totalBudget = globalTotalBudget ? parseFloat(globalTotalBudget.amount) : 0;
+  const activeBudgets = budgets.filter(b => b.monthly_limit !== null);
+  const totalBudget = activeBudgets.reduce((sum, b) => sum + (parseFloat(b.monthly_limit) || 0), 0);
   const totalSpent = budgets.reduce((sum, b) => sum + (parseFloat(b.total_spent) || 0), 0);
   
-  // A category budget is considered active if it has a limit set
-  const activeBudgets = budgets.filter(b => b.monthly_limit !== null);
-
   const currentYearObj = new Date().getFullYear();
 
   return (
@@ -144,32 +116,15 @@ export const BudgetsPage = () => {
             </select>
           </div>
           
-          {!globalTotalBudget ? (
-            <button
-              onClick={() => setIsTotalModalOpen(true)}
-              className="btn-primary py-2 px-4"
-            >
-              <Plus className="w-4 h-4" /> Set Total Budget
-            </button>
-          ) : (
-            <div className="flex gap-2">
-              <button
-                onClick={() => setIsTotalModalOpen(true)}
-                className="btn-secondary py-2 px-4"
-              >
-                Edit Total Budget
-              </button>
-              <button
-                onClick={() => {
-                  setEditingBudget(null);
-                  setIsModalOpen(true);
-                }}
-                className="btn-primary py-2 px-4"
-              >
-                <Plus className="w-4 h-4" /> Set Budget
-              </button>
-            </div>
-          )}
+          <button
+            onClick={() => {
+              setEditingBudget(null);
+              setIsModalOpen(true);
+            }}
+            className="btn-primary py-2 px-4"
+          >
+            <Plus className="w-4 h-4" /> Set Budget
+          </button>
         </div>
       </div>
 
@@ -241,31 +196,18 @@ export const BudgetsPage = () => {
         </div>
       ) : (
         <EmptyState 
-          title={!globalTotalBudget ? "No Total Budget Set" : "No Category Budgets Set"}
-          description={
-            !globalTotalBudget 
-              ? `Please set a total budget for ${new Date(0, selectedMonth - 1).toLocaleString('default', { month: 'long' })} ${selectedYear} before adding category budgets.`
-              : `You haven't set any category budgets for ${new Date(0, selectedMonth - 1).toLocaleString('default', { month: 'long' })} ${selectedYear}.`
-          }
+          title="No Category Budgets Set"
+          description={`You haven't set any category budgets for ${new Date(0, selectedMonth - 1).toLocaleString('default', { month: 'long' })} ${selectedYear}.`}
           action={
-            !globalTotalBudget ? (
-              <button
-                onClick={() => setIsTotalModalOpen(true)}
-                className="btn-primary mt-2"
-              >
-                Set Total Budget
-              </button>
-            ) : (
-              <button
-                onClick={() => {
-                  setEditingBudget(null);
-                  setIsModalOpen(true);
-                }}
-                className="btn-primary mt-2"
-              >
-                Set Your First Category Budget
-              </button>
-            )
+            <button
+              onClick={() => {
+                setEditingBudget(null);
+                setIsModalOpen(true);
+              }}
+              className="btn-primary mt-2"
+            >
+              Set Your First Category Budget
+            </button>
           }
         />
       )}
@@ -277,16 +219,6 @@ export const BudgetsPage = () => {
         initialData={editingBudget}
         categories={categories}
         isSaving={isSaving}
-      />
-      
-      <TotalBudgetModal
-        isOpen={isTotalModalOpen}
-        onClose={() => setIsTotalModalOpen(false)}
-        onSave={handleSaveTotal}
-        initialAmount={globalTotalBudget?.amount}
-        isSaving={isSavingTotal}
-        month={selectedMonth}
-        year={selectedYear}
       />
     </div>
   );
