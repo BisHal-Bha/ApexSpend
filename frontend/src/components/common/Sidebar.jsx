@@ -2,6 +2,7 @@ import React from 'react';
 import { LayoutDashboard, Receipt, PieChart, Settings, Sun, Moon, LogOut } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
 import { useAuth } from '../../context/AuthContext';
+import logo from '../../assets/logo.jpg';
 
 export const Sidebar = ({ activeTab, setActiveTab }) => {
   const { theme, toggleTheme } = useTheme();
@@ -19,9 +20,7 @@ export const Sidebar = ({ activeTab, setActiveTab }) => {
       <div>
         {/* Brand Logo */}
         <div className="flex items-center gap-3 px-3 py-4 mb-6">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-brand-400 to-brand-600 flex items-center justify-center text-white font-bold text-xl shadow-md shadow-brand-500/20">
-            M
-          </div>
+          <img src={logo} alt="ApexSpend Logo" className="w-10 h-10 object-contain rounded-lg" />
           <span className="font-bold text-lg text-surface-900 dark:text-white tracking-tight">
             Apex<span className="text-brand-500">Spend</span>
           </span>

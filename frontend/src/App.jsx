@@ -10,6 +10,7 @@ import { SettingsPage } from './pages/SettingsPage';
 import { LoginPage } from './pages/LoginPage';
 import { LoadingSpinner } from './components/common/LoadingSpinner';
 import { AnimatePresence, motion } from 'framer-motion';
+import logo from './assets/logo.jpg';
 
 function MainApp() {
   const { user, loading } = useAuth();
@@ -39,9 +40,7 @@ function MainApp() {
       {/* Mobile Menu Toggle */}
       <div className="lg:hidden fixed top-0 left-0 w-full h-16 bg-white/80 dark:bg-surface-900/80 backdrop-blur-xl border-b border-surface-200 dark:border-surface-800 z-50 flex items-center justify-between px-4">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-brand-400 to-brand-600 flex items-center justify-center text-white font-bold text-sm shadow-md shadow-brand-500/20">
-            A
-          </div>
+          <img src={logo} alt="ApexSpend Logo" className="w-8 h-8 object-contain rounded-md" />
           <span className="font-bold text-surface-900 dark:text-white tracking-tight">Apex<span className="text-brand-500">Spend</span></span>
         </div>
         <button 
