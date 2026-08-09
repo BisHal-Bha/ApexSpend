@@ -22,6 +22,7 @@ const corsOptions = {
       'http://localhost:5173', 
       'http://localhost:5174', 
       'http://localhost:5175',
+      'https://apex-spend-jopr-mu.vercel.app',
       process.env.CLIENT_URL
     ].filter(Boolean);
 
@@ -30,6 +31,11 @@ const corsOptions = {
     
     // In development, we can be more permissive with localhost
     if (process.env.NODE_ENV !== 'production' && origin.startsWith('http://localhost:')) {
+      return callback(null, true);
+    }
+
+    // Allow all Vercel preview deployments for this project
+    if (origin.match(/^https:\/\/apex-spend.*\.vercel\.app$/)) {
       return callback(null, true);
     }
     
