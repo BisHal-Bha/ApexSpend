@@ -7,6 +7,7 @@ const transactionRoutes = require('./routes/transactionRoutes');
 const budgetRoutes = require('./routes/budgetRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
 const analyticsRoutes = require('./routes/analyticsRoutes');
+const totalBudgetRoutes = require('./routes/totalBudgetRoutes');
 const { errorHandler } = require('./middleware/errorHandler');
 const connectDB = require('./config/db');
 
@@ -60,6 +61,7 @@ app.use('/api/transactions', transactionRoutes);
 app.use('/api/budgets', budgetRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/analytics', analyticsRoutes);
+app.use('/api/total-budgets', totalBudgetRoutes);
 
 // Global Error Middleware
 app.use(errorHandler);
