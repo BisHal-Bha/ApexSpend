@@ -28,12 +28,13 @@ exports.setTotalBudget = async (req, res, next) => {
 
     const totalBudget = await TotalBudget.findOneAndUpdate(
       { user_id: userId, month: budgetMonth, year: budgetYear },
-      { amount: parseFloat(amount) },
-      { new: true, upsert: true }
+      { $set: { amount: parseFloat(amount) } },
+      { new: true, upsert: true, runValidators: true }
     );
 
     res.json(totalBudget);
   } catch (error) {
+    console.error('TOTAL BUDGET ERROR:', error);
     next(error);
   }
 };

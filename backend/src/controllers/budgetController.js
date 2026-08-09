@@ -79,8 +79,8 @@ exports.setBudget = async (req, res, next) => {
 
     const budget = await Budget.findOneAndUpdate(
       { user_id: userId, category_id, month: budgetMonth, year: budgetYear },
-      { monthly_limit: parseFloat(monthly_limit) },
-      { new: true, upsert: true }
+      { $set: { monthly_limit: parseFloat(monthly_limit) } },
+      { new: true, upsert: true, runValidators: true }
     );
 
     res.json(budget);
