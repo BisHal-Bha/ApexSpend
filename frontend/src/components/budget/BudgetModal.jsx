@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Modal } from '../common/Modal';
+import { getCategoryId } from '../../utils/category';
 
 export const BudgetModal = ({ isOpen, onClose, onSave, initialData, categories, isSaving }) => {
   const [formData, setFormData] = useState({
@@ -65,7 +66,7 @@ export const BudgetModal = ({ isOpen, onClose, onSave, initialData, categories, 
           >
             <option value="" disabled>Select category</option>
             {expenseCategories.map((cat) => (
-              <option key={cat.id} value={cat.id}>{cat.name}</option>
+              <option key={getCategoryId(cat)} value={getCategoryId(cat)}>{cat.name}</option>
             ))}
           </select>
           {errors.category_id && <p className="text-red-500 text-xs mt-1">{errors.category_id}</p>}

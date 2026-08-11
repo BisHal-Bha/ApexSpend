@@ -1,16 +1,12 @@
+const mongoose = require('mongoose');
 const Category = require('../models/Category');
+const { formatCategory, getCategoriesForUser } = require('../utils/defaultCategories');
 
 exports.getCategories = async (req, res, next) => {
   try {
     const userId = new mongoose.Types.ObjectId(req.user.id);
     const { type } = req.query;
-
-    const filter = { user_id: userId };
-    if (type && ['income', 'expense'].includes(type)) {
-      filter.type = type;
-    }
-
-    const categories = await Category.find(filter).sort({ type: 1, name: 1 });
+    const categories = await getCategoriesForUser(userId, type);
     res.json(categories);
   } catch (error) {
     next(error);
@@ -48,7 +44,7 @@ exports.createCategory = async (req, res, next) => {
       icon: icon || 'Tag',
     });
 
-    res.status(201).json(category);
+    res.status(201).json(formatCategory(category.toObject()));
   } catch (error) {
     next(error);
   }
@@ -84,7 +80,7 @@ exports.updateCategory = async (req, res, next) => {
     if (icon) updates.icon = icon;
 
     const updated = await Category.findByIdAndUpdate(id, updates, { returnDocument: 'after' });
-    res.json(updated);
+    res.json(formatCategory(updated.toObject()));
   } catch (error) {
     next(error);
   }

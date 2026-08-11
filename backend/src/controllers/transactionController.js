@@ -98,7 +98,9 @@ exports.createTransaction = async (req, res, next) => {
 
     const tx = await Transaction.create({
       user_id: userId,
-      category_id: category_id || null,
+      category_id: category_id && mongoose.Types.ObjectId.isValid(category_id)
+        ? new mongoose.Types.ObjectId(category_id)
+        : null,
       amount: parseFloat(amount),
       type,
       merchant_name: merchant_name.trim(),
@@ -135,7 +137,11 @@ exports.updateTransaction = async (req, res, next) => {
     }
 
     const updates = {};
-    if (category_id !== undefined) updates.category_id = category_id || null;
+    if (category_id !== undefined) {
+      updates.category_id = category_id && mongoose.Types.ObjectId.isValid(category_id)
+        ? new mongoose.Types.ObjectId(category_id)
+        : null;
+    }
     if (amount !== undefined) updates.amount = parseFloat(amount);
     if (type !== undefined) updates.type = type;
     if (merchant_name !== undefined) updates.merchant_name = merchant_name.trim();

@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const TotalBudget = require('../models/TotalBudget');
 
 exports.getTotalBudget = async (req, res, next) => {

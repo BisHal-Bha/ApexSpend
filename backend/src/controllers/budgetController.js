@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const Budget = require('../models/Budget');
 const Category = require('../models/Category');
 const Transaction = require('../models/Transaction');
@@ -78,7 +79,7 @@ exports.setBudget = async (req, res, next) => {
     const budgetYear = parseInt(year) || new Date().getFullYear();
 
     const budget = await Budget.findOneAndUpdate(
-      { user_id: userId, category_id, month: budgetMonth, year: budgetYear },
+      { user_id: userId, category_id: new mongoose.Types.ObjectId(category_id), month: budgetMonth, year: budgetYear },
       { $set: { monthly_limit: parseFloat(monthly_limit) } },
       { returnDocument: 'after', upsert: true, runValidators: true }
     );

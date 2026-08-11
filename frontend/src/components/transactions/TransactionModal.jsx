@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Modal } from '../common/Modal';
 import { useFetch } from '../../hooks/useFetch';
+import { getCategoryId } from '../../utils/category';
 import { format } from 'date-fns';
 
 export const TransactionModal = ({ isOpen, onClose, onSave, initialData, isSaving }) => {
@@ -136,7 +137,7 @@ export const TransactionModal = ({ isOpen, onClose, onSave, initialData, isSavin
             >
               <option value="" disabled>Select category</option>
               {filteredCategories.map((cat) => (
-                <option key={cat.id} value={cat.id}>{cat.name}</option>
+                <option key={getCategoryId(cat)} value={getCategoryId(cat)}>{cat.name}</option>
               ))}
             </select>
           </div>

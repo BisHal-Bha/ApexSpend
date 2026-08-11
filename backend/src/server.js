@@ -52,6 +52,29 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 
+// Root routes (Render service URL opens in browser)
+app.get('/', (req, res) => {
+  res.json({
+    status: 'ok',
+    message: 'ApexSpend API',
+    health: '/api/health',
+  });
+});
+
+app.get('/api', (req, res) => {
+  res.json({
+    status: 'ok',
+    message: 'ApexSpend API',
+    endpoints: {
+      health: '/api/health',
+      auth: '/api/auth',
+      transactions: '/api/transactions',
+      budgets: '/api/budgets',
+      categories: '/api/categories',
+    },
+  });
+});
+
 // Health check
 app.get('/api/health', (req, res) => res.json({ status: 'ok', timestamp: new Date().toISOString() }));
 

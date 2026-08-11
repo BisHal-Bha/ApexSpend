@@ -7,6 +7,7 @@ import { api } from '../services/api';
 import { StatusMessage } from '../components/common/StatusMessage';
 import { ConfirmationBanner } from '../components/common/ConfirmationBanner';
 import { Modal } from '../components/common/Modal';
+import { getCategoryId } from '../utils/category';
 
 export const SettingsPage = () => {
   const { user } = useAuth();
@@ -31,7 +32,7 @@ export const SettingsPage = () => {
     setIsSaving(true);
     try {
       if (editingCategory) {
-        await api.put(`/categories/${editingCategory.id}`, categoryForm);
+        await api.put(`/categories/${getCategoryId(editingCategory)}`, categoryForm);
         setStatus({ message: 'Category updated', type: 'success' });
       } else {
         await api.post('/categories', categoryForm);
@@ -53,7 +54,7 @@ export const SettingsPage = () => {
     if (!deleteRequest) return;
     setIsSaving(true);
     try {
-      await api.delete(`/categories/${deleteRequest.id}`);
+      await api.delete(`/categories/${getCategoryId(deleteRequest)}`);
       setStatus({ message: 'Category deleted', type: 'success' });
       setDeleteRequest(null);
       refetchCategories();
@@ -160,7 +161,7 @@ export const SettingsPage = () => {
         
         <div className="divide-y divide-surface-100 dark:divide-surface-800 max-h-96 overflow-y-auto custom-scrollbar">
           {categories?.map(category => (
-            <div key={category.id} className="p-4 flex items-center justify-between hover:bg-surface-50 dark:hover:bg-surface-800/30 transition-colors group">
+            <div key={getCategoryId(category)} className="p-4 flex items-center justify-between hover:bg-surface-50 dark:hover:bg-surface-800/30 transition-colors group">
               <div className="flex items-center gap-3">
                 <div 
                   className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 shadow-sm"

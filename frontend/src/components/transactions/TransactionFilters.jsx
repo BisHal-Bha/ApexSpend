@@ -1,6 +1,7 @@
 import React from 'react';
 import { Search, Filter } from 'lucide-react';
 import { useFetch } from '../../hooks/useFetch';
+import { getCategoryId } from '../../utils/category';
 
 export const TransactionFilters = ({ filters, setFilters }) => {
   const { data: categories } = useFetch('/categories');
@@ -37,7 +38,7 @@ export const TransactionFilters = ({ filters, setFilters }) => {
           >
             <option value="">All Categories</option>
             {categories?.map((cat) => (
-              <option key={cat.id} value={cat.id}>{cat.name}</option>
+              <option key={getCategoryId(cat)} value={getCategoryId(cat)}>{cat.name}</option>
             ))}
           </select>
         </div>
