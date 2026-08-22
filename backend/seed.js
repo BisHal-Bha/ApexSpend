@@ -45,6 +45,7 @@ const seedData = async () => {
       { user_id: demoUser._id, name: 'Healthcare', type: 'expense', color: '#ef4444', icon: 'Heart', is_default: true },
       { user_id: demoUser._id, name: 'Shopping', type: 'expense', color: '#8b5cf6', icon: 'ShoppingBag', is_default: true },
       { user_id: demoUser._id, name: 'Subscriptions', type: 'expense', color: '#06b6d4', icon: 'CreditCard', is_default: true },
+      { user_id: demoUser._id, name: 'Education', type: 'expense', color: '#facc15', icon: 'GraduationCap', is_default: true },
       { user_id: demoUser._id, name: 'Salary', type: 'income', color: '#22c55e', icon: 'DollarSign', is_default: true },
       { user_id: demoUser._id, name: 'Freelance', type: 'income', color: '#14b8a6', icon: 'Briefcase', is_default: true }
     ];

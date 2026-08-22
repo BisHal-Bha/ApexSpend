@@ -10,6 +10,7 @@ const DEFAULT_CATEGORIES = [
   { name: 'Healthcare', type: 'expense', color: '#ef4444', icon: 'Heart' },
   { name: 'Shopping', type: 'expense', color: '#8b5cf6', icon: 'ShoppingBag' },
   { name: 'Subscriptions', type: 'expense', color: '#06b6d4', icon: 'CreditCard' },
+  { name: 'Education', type: 'expense', color: '#facc15', icon: 'GraduationCap' },
   { name: 'Salary', type: 'income', color: '#22c55e', icon: 'DollarSign' },
   { name: 'Freelance', type: 'income', color: '#14b8a6', icon: 'Briefcase' },
 ];

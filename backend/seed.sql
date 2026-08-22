@@ -17,8 +17,9 @@ INSERT INTO categories (id, user_id, name, type, color, icon, is_default) VALUES
 ('c1000000-0000-0000-0000-000000000007', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 'Healthcare', 'expense', '#ef4444', 'Heart', true),
 ('c1000000-0000-0000-0000-000000000008', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 'Shopping', 'expense', '#8b5cf6', 'ShoppingBag', true),
 ('c1000000-0000-0000-0000-000000000009', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 'Subscriptions', 'expense', '#06b6d4', 'CreditCard', true),
-('c1000000-0000-0000-0000-000000000010', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 'Salary', 'income', '#22c55e', 'DollarSign', true),
-('c1000000-0000-0000-0000-000000000011', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 'Freelance', 'income', '#14b8a6', 'Briefcase', true);
+('c1000000-0000-0000-0000-000000000010', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 'Education', 'expense', '#facc15', 'GraduationCap', true),
+('c1000000-0000-0000-0000-000000000011', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 'Salary', 'income', '#22c55e', 'DollarSign', true),
+('c1000000-0000-0000-0000-000000000012', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 'Freelance', 'income', '#14b8a6', 'Briefcase', true);
 
 -- Insert Monthly Budgets for current month
 INSERT INTO budgets (user_id, category_id, monthly_limit, month, year) VALUES

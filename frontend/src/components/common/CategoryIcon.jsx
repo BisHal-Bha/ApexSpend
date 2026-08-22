@@ -11,7 +11,8 @@ import {
   CreditCard, 
   DollarSign, 
   Briefcase, 
-  Tag 
+  Tag,
+  GraduationCap
 } from 'lucide-react';
 
 const iconMap = {
@@ -26,7 +27,8 @@ const iconMap = {
   CreditCard,
   DollarSign,
   Briefcase,
-  Tag
+  Tag,
+  GraduationCap
 };
 
 export const CategoryIcon = ({ iconName, fallback = '?', className = "w-4 h-4" }) => {
