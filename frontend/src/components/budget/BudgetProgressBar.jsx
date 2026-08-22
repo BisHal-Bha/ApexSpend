@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Edit3, Trash2 } from 'lucide-react';
 import clsx from 'clsx';
+import { CategoryIcon } from '../common/CategoryIcon';
 
 export const BudgetProgressBar = ({ budget, onEdit, onDelete }) => {
   const { category_name, category_color, total_spent, monthly_limit } = budget;
@@ -31,9 +32,7 @@ export const BudgetProgressBar = ({ budget, onEdit, onDelete }) => {
             className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 shadow-sm"
             style={{ backgroundColor: `${category_color || '#64748b'}20`, color: category_color || '#64748b' }}
           >
-            <span className="font-bold text-sm">
-              {category_name ? category_name.charAt(0) : '?'}
-            </span>
+            <CategoryIcon iconName={budget.category_icon} fallback={category_name ? category_name.charAt(0) : '?'} className="w-4 h-4" />
           </div>
           <div>
             <h4 className="font-semibold text-surface-900 dark:text-white leading-tight">{category_name}</h4>

@@ -110,7 +110,7 @@ export const BudgetsPage = () => {
               onChange={e => setSelectedYear(parseInt(e.target.value))}
               className="select border-transparent bg-transparent focus:ring-0 text-sm font-medium pr-8 py-1.5"
             >
-              {[currentYearObj - 1, currentYearObj, currentYearObj + 1].map(year => (
+              {Array.from({ length: 51 }, (_, i) => 2020 + i).map(year => (
                 <option key={year} value={year}>{year}</option>
               ))}
             </select>

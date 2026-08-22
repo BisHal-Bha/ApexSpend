@@ -47,7 +47,8 @@ export const BudgetModal = ({ isOpen, onClose, onSave, initialData, categories, 
     }
   };
 
-  const expenseCategories = categories?.filter(c => c.type === 'expense') || [];
+  // Only show expense categories for budgets
+  const expenseCategories = (categories || []).filter(c => c.type === 'expense');
 
   return (
     <Modal 
@@ -66,14 +67,16 @@ export const BudgetModal = ({ isOpen, onClose, onSave, initialData, categories, 
           >
             <option value="" disabled>Select category</option>
             {expenseCategories.map((cat) => (
-              <option key={getCategoryId(cat)} value={getCategoryId(cat)}>{cat.name}</option>
+              <option key={getCategoryId(cat)} value={getCategoryId(cat)}>
+                {cat.name} {cat.type === 'expense' ? '🔴' : '🟢'}
+              </option>
             ))}
           </select>
           {errors.category_id && <p className="text-red-500 text-xs mt-1">{errors.category_id}</p>}
         </div>
 
         <div>
-          <label className="input-label">Monthly Limit ($)</label>
+          <label className="input-label">Monthly Limit (Rs.)</label>
           <input
             type="number"
             step="0.01"

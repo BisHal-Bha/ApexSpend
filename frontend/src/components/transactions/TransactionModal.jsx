@@ -58,8 +58,8 @@ export const TransactionModal = ({ isOpen, onClose, onSave, initialData, isSavin
     }
   };
 
-  // Filter categories by selected type
-  const filteredCategories = categories?.filter(c => c.type === formData.type) || [];
+  // Show all categories regardless of type
+  const filteredCategories = categories || [];
 
   return (
     <Modal 
@@ -137,7 +137,9 @@ export const TransactionModal = ({ isOpen, onClose, onSave, initialData, isSavin
             >
               <option value="" disabled>Select category</option>
               {filteredCategories.map((cat) => (
-                <option key={getCategoryId(cat)} value={getCategoryId(cat)}>{cat.name}</option>
+                <option key={getCategoryId(cat)} value={getCategoryId(cat)}>
+                  {cat.name} {cat.type === 'expense' ? '🔴' : '🟢'}
+                </option>
               ))}
             </select>
           </div>

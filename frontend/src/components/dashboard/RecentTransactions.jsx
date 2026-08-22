@@ -1,4 +1,5 @@
 import React from 'react';
+import { CategoryIcon } from '../common/CategoryIcon';
 
 export const RecentTransactions = ({ transactions, onViewAll }) => {
   return (
@@ -25,9 +26,7 @@ export const RecentTransactions = ({ transactions, onViewAll }) => {
                     className="w-10 h-10 rounded-full flex items-center justify-center shrink-0 shadow-sm"
                     style={{ backgroundColor: `${tx.category_color || '#64748b'}20`, color: tx.category_color || '#64748b' }}
                   >
-                    <span className="font-bold text-sm">
-                      {tx.category_name ? tx.category_name.charAt(0) : '?'}
-                    </span>
+                    <CategoryIcon iconName={tx.category_icon} fallback={tx.category_name ? tx.category_name.charAt(0) : '?'} className="w-5 h-5" />
                   </div>
                   <div className="truncate">
                     <p className="font-semibold text-sm text-surface-900 dark:text-white truncate">

@@ -2,6 +2,7 @@ import React from 'react';
 import { Trash2, Edit3, ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
 import { EmptyState } from '../common/EmptyState';
 import { TableRowSkeleton } from '../common/LoadingSpinner';
+import { CategoryIcon } from '../common/CategoryIcon';
 
 export const TransactionTable = ({ transactions, loading, onEdit, onDeleteRequest, filters, setFilters }) => {
   
@@ -73,7 +74,9 @@ export const TransactionTable = ({ transactions, loading, onEdit, onDeleteReques
                         color: tx.category_color || '#64748b',
                       }}
                     >
-                      <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: tx.category_color || '#64748b' }}></span>
+                      <span className="w-5 h-5 rounded-full flex items-center justify-center" style={{ backgroundColor: `${tx.category_color || '#64748b'}20` }}>
+                        <CategoryIcon iconName={tx.category_icon} className="w-3 h-3" />
+                      </span>
                       {tx.category_name || 'Uncategorized'}
                     </span>
                   </td>

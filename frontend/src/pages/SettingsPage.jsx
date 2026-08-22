@@ -8,6 +8,7 @@ import { StatusMessage } from '../components/common/StatusMessage';
 import { ConfirmationBanner } from '../components/common/ConfirmationBanner';
 import { Modal } from '../components/common/Modal';
 import { getCategoryId } from '../utils/category';
+import { CategoryIcon } from '../components/common/CategoryIcon';
 
 export const SettingsPage = () => {
   const { user } = useAuth();
@@ -167,7 +168,7 @@ export const SettingsPage = () => {
                   className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 shadow-sm"
                   style={{ backgroundColor: `${category.color || '#64748b'}20`, color: category.color || '#64748b' }}
                 >
-                  <span className="font-bold text-xs">{category.name.charAt(0)}</span>
+                  <CategoryIcon iconName={category.icon} fallback={category.name.charAt(0)} className="w-4 h-4" />
                 </div>
                 <div>
                   <h4 className="font-medium text-sm text-surface-900 dark:text-white">{category.name}</h4>

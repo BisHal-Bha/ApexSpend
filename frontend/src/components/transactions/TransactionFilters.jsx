@@ -38,7 +38,9 @@ export const TransactionFilters = ({ filters, setFilters }) => {
           >
             <option value="">All Categories</option>
             {categories?.map((cat) => (
-              <option key={getCategoryId(cat)} value={getCategoryId(cat)}>{cat.name}</option>
+              <option key={getCategoryId(cat)} value={getCategoryId(cat)}>
+                {cat.name} {cat.type === 'expense' ? '🔴' : '🟢'}
+              </option>
             ))}
           </select>
         </div>
