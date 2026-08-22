@@ -1,5 +1,6 @@
 const Transaction = require('../models/Transaction');
 const Budget = require('../models/Budget');
+const TotalBudget = require('../models/TotalBudget');
 const mongoose = require('mongoose');
 
 exports.getDashboardSummary = async (req, res, next) => {
@@ -45,12 +46,9 @@ exports.getDashboardSummary = async (req, res, next) => {
     ]);
     const prevCashFlow = prevCashFlowAgg[0] || { total_spending: 0, total_income: 0 };
 
-    // 3. Total budget for month
-    const budgetAgg = await Budget.aggregate([
-      { $match: { user_id: userId, month: currentMonth, year: currentYear } },
-      { $group: { _id: null, total_budget: { $sum: '$monthly_limit' } } },
-    ]);
-    const totalBudget = budgetAgg[0]?.total_budget || 0;
+    // 3. Total budget for month (from TotalBudget collection)
+    const totalBudgetDoc = await TotalBudget.findOne({ user_id: userId, month: currentMonth, year: currentYear });
+    const totalBudget = totalBudgetDoc ? totalBudgetDoc.amount : 0;
 
     // 4. Category breakdown (donut chart)
     const categoryBreakdown = await Transaction.aggregate([

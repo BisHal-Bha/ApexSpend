@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Plus } from 'lucide-react';
+import { Plus, Wallet } from 'lucide-react';
 import { BudgetProgressBar } from '../components/budget/BudgetProgressBar';
 import { BudgetModal } from '../components/budget/BudgetModal';
+import { TotalBudgetModal } from '../components/budget/TotalBudgetModal';
 import { StatusMessage } from '../components/common/StatusMessage';
 import { ConfirmationBanner } from '../components/common/ConfirmationBanner';
 import { EmptyState } from '../components/common/EmptyState';
@@ -15,9 +16,11 @@ export const BudgetsPage = () => {
   
   const { data: categories } = useFetch('/categories');
   const [budgets, setBudgets] = useState([]);
+  const [totalBudget, setTotalBudget] = useState(0);
   const [loading, setLoading] = useState(true);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isTotalBudgetModalOpen, setIsTotalBudgetModalOpen] = useState(false);
   const [editingBudget, setEditingBudget] = useState(null);
   const [isSaving, setIsSaving] = useState(false);
   
@@ -27,8 +30,12 @@ export const BudgetsPage = () => {
   const fetchBudgets = useCallback(async () => {
     setLoading(true);
     try {
-      const budgetsRes = await api.get(`/budgets?month=${selectedMonth}&year=${selectedYear}`);
+      const [budgetsRes, totalBudgetRes] = await Promise.all([
+        api.get(`/budgets?month=${selectedMonth}&year=${selectedYear}`),
+        api.get(`/total-budgets?month=${selectedMonth}&year=${selectedYear}`)
+      ]);
       setBudgets(budgetsRes.data);
+      setTotalBudget(totalBudgetRes.data?.amount || 0);
     } catch (err) {
       setStatus({ message: 'Failed to load budgets', type: 'error' });
     } finally {
@@ -62,6 +69,23 @@ export const BudgetsPage = () => {
     }
   };
 
+  const handleSaveTotalBudget = async (data) => {
+    setIsSaving(true);
+    try {
+      await api.post('/total-budgets', { ...data, month: selectedMonth, year: selectedYear });
+      setStatus({ message: 'Total budget updated successfully', type: 'success' });
+      setIsTotalBudgetModalOpen(false);
+      fetchBudgets();
+    } catch (err) {
+      setStatus({ 
+        message: err.response?.data?.message || 'Failed to save total budget', 
+        type: 'error' 
+      });
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
   const confirmDelete = async () => {
     if (!deleteRequest) return;
     setIsSaving(true);
@@ -78,7 +102,6 @@ export const BudgetsPage = () => {
   };
 
   const activeBudgets = budgets.filter(b => b.monthly_limit !== null);
-  const totalBudget = activeBudgets.reduce((sum, b) => sum + (parseFloat(b.monthly_limit) || 0), 0);
   const totalSpent = budgets.reduce((sum, b) => sum + (parseFloat(b.total_spent) || 0), 0);
   
   const currentYearObj = new Date().getFullYear();
@@ -117,13 +140,19 @@ export const BudgetsPage = () => {
           </div>
           
           <button
+            onClick={() => setIsTotalBudgetModalOpen(true)}
+            className="btn-secondary py-2 px-4 flex items-center gap-2"
+          >
+            <Wallet className="w-4 h-4" /> Set Monthly Budget
+          </button>
+          <button
             onClick={() => {
               setEditingBudget(null);
               setIsModalOpen(true);
             }}
-            className="btn-primary py-2 px-4"
+            className="btn-primary py-2 px-4 flex items-center gap-2"
           >
-            <Plus className="w-4 h-4" /> Set Budget
+            <Plus className="w-4 h-4" /> Set Category Budget
           </button>
         </div>
       </div>
@@ -218,6 +247,14 @@ export const BudgetsPage = () => {
         onSave={handleSave}
         initialData={editingBudget}
         categories={categories}
+        isSaving={isSaving}
+      />
+
+      <TotalBudgetModal
+        isOpen={isTotalBudgetModalOpen}
+        onClose={() => setIsTotalBudgetModalOpen(false)}
+        onSave={handleSaveTotalBudget}
+        initialData={{ amount: totalBudget }}
         isSaving={isSaving}
       />
     </div>
